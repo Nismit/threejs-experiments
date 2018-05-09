@@ -17,8 +17,10 @@
     "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "glslify-loader": "^1.0.2",
     "node-sass": "^4.9.0",
     "postcss-loader": "^2.1.5",
+    "raw-loader": "^0.5.1",
     "sass-loader": "^7.0.1",
     "style-loader": "^0.21.0",
     "url-loader": "^1.0.1",
@@ -26,6 +28,7 @@
     "webpack-cli": "^2.0.14"
   },
   "dependencies": {
+    "glslify": "^6.1.1",
     "three": "^0.91.0"
   }
 }
