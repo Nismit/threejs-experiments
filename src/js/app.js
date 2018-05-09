@@ -1,15 +1,9 @@
-// import * as space from './space';
-import * as space from './bufferSpace';
-// import * as space from './shaderSpace';
-// import * as plane from './plane';
-// import * as waves from './waves';
-// import * as shader from './minimalShader';
+import * as bufferSpace from './bufferSpace';
+import * as shaderSpace from './shaderSpace';
 
 const init = () => {
-  space.default();
-  // plane.default();
-  // waves.default();
-  // shader.default();
+  // bufferSpace.default();
+  shaderSpace.default();
 }
 
 window.addEventListener('load', init);
