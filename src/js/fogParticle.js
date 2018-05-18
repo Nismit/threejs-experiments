@@ -12,6 +12,11 @@ export default function() {
         material    = new THREE.ShaderMaterial(),
         time        = new THREE.Clock();
 
+  let mousePos = {
+    x: _width / 4,
+    y: _height / 4
+  };
+
   const generateCircle = () => {
 
     const canvas  = document.createElement( 'canvas' );
@@ -32,7 +37,7 @@ export default function() {
     return canvas;
   }
 
-  const PARTICLES = 1000;
+  const PARTICLES = 20000;
 
   const startTime   = Date.now();
   const speed  = Math.PI * 2 / 5000;
@@ -48,10 +53,11 @@ export default function() {
     const positions  = [];
 
     for(let i = 0; i < PARTICLES; i++) {
+      const theta = (i / PARTICLES) * Math.PI * 2;
       positions.push(
-        Math.random() + 5,
-        0,
-        0
+        Math.cos(theta)*70 + Math.random()*10,
+        Math.sin(theta)*70 + Math.random()*10,
+        Math.random()*30
       );
     }
 
@@ -110,6 +116,11 @@ export default function() {
     uniforms.mouse.value.x = (e.clientX - rect.left) / element.clientWidth  *  2 - 1;
     uniforms.mouse.value.y = (e.clientY - rect.top)  / element.clientHeight * -2 + 1;
 
+    mousePos.x = (e.clientX - rect.left) / element.clientWidth;
+    mousePos.y = (e.clientY - rect.top) / element.clientHeight;
+
+    // console.log('Updated:', mousePos);
+    
     // console.log('Mouse x value: ', uniforms.mouse.value.x);
     // console.log('Mouse y value: ', uniforms.mouse.value.y);
   }
@@ -120,12 +131,26 @@ export default function() {
 
   const render = () => {
 
-    var elapsedMilliseconds = Date.now() - startTime;
-    var elapsedSeconds = elapsedMilliseconds / 1000.;
+    let positions  = geometry.getAttribute('position').array;
 
-    // console.log(Math.sin(elapsedMilliseconds * speed));
-    // uniforms.opacity.value = Math.sin(elapsedMilliseconds * speed);
-    // uniforms.time.value = 60. * elapsedSeconds;
+    for(let i = 0; i < PARTICLES; i++) {
+      const theta = (i / PARTICLES) * Math.PI * 2;
+      positions[ i * 3 + 2 ] += time.getElapsedTime() * 0.1 * Math.random()*10;
+
+      // if(mousePos.x !== null && mousePos.y !== null) {
+        // positions[ i * 3 ] = mousePos.x;
+        // positions[ i * 3 + 1 ] = mousePos.y;
+      // }
+
+      if(positions[ i * 3 + 2 ] > 700) {
+        positions[ i * 3 ]      = Math.cos(theta)*70 + Math.random()*10;
+        positions[ i * 3 + 1 ]  = Math.sin(theta)*70 + Math.random()*10;
+        positions[ i * 3 + 2 ]  = Math.random()*30;
+        //positions[ i * 3 + 2 ]  = 0;
+      }
+    }
+  
+    geometry.attributes.position.needsUpdate = true;
     
     uniforms.time.value = time.getElapsedTime() * 0.01;
 
@@ -142,7 +167,7 @@ export default function() {
 
   const init = () => {
     _canvas.style.display = 'block';
-    camera.position.set(0, 0, 100);
+    camera.position.set(0, 0, 700);
 
     generateParticle();
     generateMaterial();
@@ -154,6 +179,9 @@ export default function() {
     onUpdateScreen();
     resize();
     mouse();
+
+    console.log(mousePos);
+
     renderLoop();
   }
   init();
